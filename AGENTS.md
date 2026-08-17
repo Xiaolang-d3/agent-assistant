@@ -22,4 +22,6 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Needs `OPENAI_API_KEY` in `.env`.
+Needs `OPENAI_API_KEY` in `.env`. Search defaults to DuckDuckGo.
+
+Browser: `python -m app` then open http://127.0.0.1:8765
