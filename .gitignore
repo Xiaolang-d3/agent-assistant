@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+*.webm
+*.wav
+*.m4a
+dist/
+build/
+.web_cache/
