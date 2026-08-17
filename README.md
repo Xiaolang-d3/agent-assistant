@@ -15,8 +15,10 @@ Put `OPENAI_API_KEY` in `.env`. Compatible gateways can set `OPENAI_BASE_URL` an
 
 Search defaults to DuckDuckGo. Set `TAVILY_API_KEY` to use Tavily instead.
 
+Native desktop (PySide6, not a webview):
+
 ```bash
-python -m app
+python -m desktop_app
 ```
 
-Then open http://127.0.0.1:8765. Type a question, or hold the copper button to speak. Speech is transcribed into the input box before you send.
+Browser UI is still available with `python -m app`.
