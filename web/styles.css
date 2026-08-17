@@ -168,19 +168,58 @@ button:focus-visible {
   min-width: 132px;
 }
 
+.talk,
 .send {
   border: 0;
   cursor: pointer;
+  font-family: "Bricolage Grotesque", "PingFang SC", sans-serif;
+}
+
+.talk {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #2a1f18;
+  color: var(--paper);
+}
+
+.talk.hot {
+  background: #3a261b;
+}
+
+.talk-orb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--copper);
+  box-shadow: 0 0 0 0 rgba(196, 132, 90, 0.5);
+}
+
+.talk.hot .talk-orb {
+  animation: pulse 1s ease-out infinite;
+}
+
+.send {
   padding: 10px 12px;
   background: var(--copper);
   color: #1a120c;
   font-weight: 700;
-  font-family: "Bricolage Grotesque", "PingFang SC", sans-serif;
 }
 
-.send:disabled {
+.send:disabled,
+.talk:disabled {
   opacity: 0.5;
   cursor: wait;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(196, 132, 90, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgba(196, 132, 90, 0);
+  }
 }
 
 @media (max-width: 640px) {
@@ -196,7 +235,14 @@ button:focus-visible {
     flex-direction: row;
   }
 
+  .talk,
   .send {
     flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .talk.hot .talk-orb {
+    animation: none;
   }
 }

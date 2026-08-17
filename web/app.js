@@ -2,10 +2,14 @@ const logEl = document.querySelector("#log");
 const formEl = document.querySelector("#composer");
 const inputEl = document.querySelector("#input");
 const sendEl = document.querySelector("#send");
+const talkEl = document.querySelector("#talk");
+const talkLabel = document.querySelector("#talk-label");
 const statusEl = document.querySelector("#status");
 
 const history = [];
 let busy = false;
+let recorder = null;
+let chunks = [];
 
 function addBubble(role, text, traces) {
   const article = document.createElement("article");
@@ -48,6 +52,7 @@ function renderTraces(steps) {
 function setBusy(next) {
   busy = next;
   sendEl.disabled = next;
+  talkEl.disabled = next;
 }
 
 async function refreshStatus() {
@@ -92,6 +97,56 @@ async function sendMessage(text) {
   }
 }
 
+async function transcribeBlob(blob) {
+  const body = new FormData();
+  body.append("audio", blob, "speech.webm");
+  const res = await fetch("/api/transcribe", { method: "POST", body });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail || "转写失败");
+  return data.text;
+}
+
+async function startTalk() {
+  if (busy || recorder) return;
+  chunks = [];
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  recorder = new MediaRecorder(stream);
+  recorder.ondataavailable = (event) => {
+    if (event.data.size) chunks.push(event.data);
+  };
+  recorder.start();
+  talkEl.classList.add("hot");
+  talkEl.setAttribute("aria-pressed", "true");
+  talkLabel.textContent = "松手结束";
+}
+
+async function stopTalk() {
+  if (!recorder) return;
+  const current = recorder;
+  recorder = null;
+  const blob = await new Promise((resolve) => {
+    current.onstop = () => resolve(new Blob(chunks, { type: current.mimeType || "audio/webm" }));
+    current.stop();
+    current.stream.getTracks().forEach((track) => track.stop());
+  });
+  talkEl.classList.remove("hot");
+  talkEl.setAttribute("aria-pressed", "false");
+  talkLabel.textContent = "按住说话";
+  if (blob.size < 800) return;
+  setBusy(true);
+  talkLabel.textContent = "转写中…";
+  try {
+    const text = await transcribeBlob(blob);
+    inputEl.value = text;
+    inputEl.focus();
+  } catch (err) {
+    addBubble("assistant", err.message || "语音转写失败");
+  } finally {
+    setBusy(false);
+    talkLabel.textContent = "按住说话";
+  }
+}
+
 formEl.addEventListener("submit", (event) => {
   event.preventDefault();
   sendMessage(inputEl.value);
@@ -102,6 +157,15 @@ inputEl.addEventListener("keydown", (event) => {
     event.preventDefault();
     sendMessage(inputEl.value);
   }
+});
+
+talkEl.addEventListener("pointerdown", (event) => {
+  event.preventDefault();
+  startTalk().catch((err) => addBubble("assistant", err.message || "无法使用麦克风"));
+});
+
+window.addEventListener("pointerup", () => {
+  stopTalk().catch((err) => addBubble("assistant", err.message || "录音失败"));
 });
 
 refreshStatus();

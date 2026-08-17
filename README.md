@@ -19,4 +19,4 @@ Search defaults to DuckDuckGo. Set `TAVILY_API_KEY` to use Tavily instead.
 python -m app
 ```
 
-Then open http://127.0.0.1:8765. Type a question; the agent searches when it needs current facts.
+Then open http://127.0.0.1:8765. Type a question, or hold the copper button to speak. Speech is transcribed into the input box before you send.
