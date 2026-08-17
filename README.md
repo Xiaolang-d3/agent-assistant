@@ -15,6 +15,14 @@ Put `OPENAI_API_KEY` in `.env`. Compatible gateways can set `OPENAI_BASE_URL` an
 
 Search defaults to DuckDuckGo. Set `TAVILY_API_KEY` to use Tavily instead.
 
+Desktop window:
+
+```bash
+python desktop.py
+```
+
+Or browser:
+
 ```bash
 python -m app
 ```
