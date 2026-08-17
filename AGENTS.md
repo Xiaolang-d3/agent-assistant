@@ -25,3 +25,5 @@ cp .env.example .env
 Needs `OPENAI_API_KEY` in `.env`. Search defaults to DuckDuckGo.
 
 Browser: `python -m app` then open http://127.0.0.1:8765
+
+Hold the copper button to dictate; text lands in the input box for review.

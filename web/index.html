@@ -24,7 +24,7 @@
 
       <main id="log" class="log" aria-live="polite">
         <article class="bubble system">
-          <p>直接打字提问。需要查证的问题，我会先上网再回答。</p>
+          <p>按住铜色按钮说话，或直接打字。需要查证的问题，我会先上网再回答。</p>
         </article>
       </main>
 
@@ -32,10 +32,14 @@
         <textarea
           id="input"
           rows="2"
-          placeholder="问一件需要查的事"
+          placeholder="问一件需要查的事，或按住说话"
           autocomplete="off"
         ></textarea>
         <div class="actions">
+          <button type="button" id="talk" class="talk" aria-pressed="false">
+            <span class="talk-orb"></span>
+            <span id="talk-label">按住说话</span>
+          </button>
           <button type="submit" id="send" class="send">发送</button>
         </div>
       </form>
