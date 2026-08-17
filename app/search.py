@@ -8,7 +8,8 @@ from __future__ import annotations
 
 import httpx
 
-from .config import TAVILY_API_KEY, search_backend
+from . import config
+from .config import search_backend
 
 
 def web_search(query: str, max_results: int = 5) -> list[dict]:
@@ -41,7 +42,7 @@ def _tavily(query: str, max_results: int) -> list[dict]:
     response = httpx.post(
         "https://api.tavily.com/search",
         json={
-            "api_key": TAVILY_API_KEY,
+            "api_key": config.TAVILY_API_KEY,
             "query": query,
             "search_depth": "basic",
             "max_results": max_results,
